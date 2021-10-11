@@ -1,26 +1,36 @@
 import {React, useState} from "react";
-import {HashRouter as Router, Route, Switch} from "react-router-dom";
+import {HashRouter as Router, Route, Switch, Redirect} from "react-router-dom";
 import Auth from "routes/Auth";
 import Home from "routes/Home";
 import { authService } from "fbase";
+import Navigation from "components/Navigation";
+import Profile from "routes/Profile.js";
 
 const AppRouter = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(authService.currentUser);
 
     return (
         <Router>
+            {isLoggedIn && <Navigation/>}
             <Switch>
                 {isLoggedIn ?
                 <>
                     <Route exact path="/">
                         <Home></Home>
                     </Route>
+                    <Route exact path="/profile">
+                        <Profile></Profile>
+                    </Route>
+                    <Redirect from="*" to="/" />
                 </>
                      : (
+                <>
                     <Route exact path="/">
-                         <Auth></Auth>
+                        <Auth></Auth>
                     </Route>
-                     )}
+                    <Redirect from="*" to="/" />
+                </>
+                )}
             </Switch>
         </Router>
     )
