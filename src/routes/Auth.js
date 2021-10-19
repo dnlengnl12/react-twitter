@@ -55,10 +55,8 @@ const Auth = () => {
         let provider;
         if(name === "google") {
             provider = new GoogleAuthProvider();
-            provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
         } else if(name === "github") {
             provider = new GithubAuthProvider();
-            
         }
 
         const auth = getAuth();
