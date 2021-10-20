@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { dbService } from "fbase";
 import { addDoc, collection, getDocs, query, onSnapshot, orderBy } from "firebase/firestore";
+import Tweet from "components/Tweet";
 
 const Home = ({ userObj }) => {
-    console.log(userObj);
     const [tweet, setTweet] = useState("");
     const [tweets, setTweets] = useState([]);
     useEffect(() => {
@@ -43,9 +43,9 @@ const Home = ({ userObj }) => {
                 <input type="submit" value="Tweet" />
             </form>
             <div>
-                {tweets.map(tweet => <div key={tweet.id}>
-                    <h4>{tweet.text}</h4>
-                    </div>)}
+                {tweets.map((tweet) => (
+                    <Tweet key={tweet.id} tweetObj={tweet} isOwner={(tweet.creatorId === userObj.uid) ? true : false}></Tweet>
+                ))}
             </div>
         </div>
     );
