@@ -21,7 +21,7 @@ function App() {
   return (
     <>
       {init ? <AppRouter isLoggedIn={isLoggedIn} userObj={userObj}></AppRouter> : "Initializing..."}
-      <footer>&copy; Twitter {new Date().getFullYear()}</footer>
+      {/* <footer>&copy; Twitter {new Date().getFullYear()}</footer> */}
     </>
   );
 }
