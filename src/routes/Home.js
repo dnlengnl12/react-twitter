@@ -3,12 +3,12 @@ import { v4 as uuidv4 } from "uuid";
 import { dbService, storageService } from "fbase";
 import { addDoc, collection, getDocs, query, onSnapshot, orderBy } from "firebase/firestore";
 import Tweet from "components/Tweet";
-import { uploadString, ref } from "firebase/storage";
+import { uploadString, ref,getDownloadURL} from "firebase/storage";
 
 const Home = ({ userObj }) => {
     const [tweet, setTweet] = useState("");
     const [tweets, setTweets] = useState([]);
-    const [attachment, setAttachment] = useState();
+    const [attachment, setAttachment] = useState("");
     useEffect(() => {
         onSnapshot(
             query(collection(dbService, "tweets"), orderBy("createdAt", "desc")),
@@ -23,21 +23,27 @@ const Home = ({ userObj }) => {
     const onSubmit = async (event) => {
         event.preventDefault();
 
-        const fileRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
-        const response = await uploadString(fileRef, attachment, "data_url");
-        console.log(response);
-/*         try {
-            const docRef = await addDoc(collection(dbService, "tweets"), {
-                text: tweet,
-                createdAt: Date.now(),
-                creatorId: userObj.uid
-            });
+        let attachmentUrl = "";
+        if(attachment != "") {
+            const fileRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+            const uploadFile = await uploadString(fileRef, attachment, "data_url");
+            attachmentUrl = await getDownloadURL(uploadFile.ref);
+        }
+        const tweetObj = {
+            text: tweet,
+            createdAt: Date.now(),
+            creatorId: userObj.uid,
+            attachmentUrl
+        }
+         try {
+            const docRef = await addDoc(collection(dbService, "tweets"), tweetObj);
             console.log("Document written with ID: ", docRef.id);
         } catch(error) {
             console.error("Error adding document: ", error);
         }
 
-        setTweet(""); */
+        setTweet("");
+        setAttachment("");
     };
     const onChange = ({target: {value}}) => {
         setTweet(value);
