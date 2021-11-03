@@ -1,11 +1,12 @@
 import { authService, dbService } from "fbase";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { collection, getDocs, query, where } from "firebase/firestore";
-
+import { updateProfile } from "firebase/auth";
 
 export default ({userObj}) => {
     const history = useHistory();
+    const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
     const onLogOutClick = () => {
         authService.signOut();
         history.push("/");
@@ -20,10 +21,33 @@ export default ({userObj}) => {
             console.log(doc.id, " => ", doc.data());
         });
     };
+    const onChange = (event) => {
+        const {
+            target: {value},
+        } = event;
+        setNewDisplayName(value);
+    }
+    const onSubmit = async (event) => {
+        event.preventDefault();
+        if(userObj.displayName !== newDisplayName) {
+            await updateProfile(userObj, {displayName:newDisplayName});
+        }
+    }
     useEffect(() => {
         getMyTweets();
     }, [])
     return (
-        <button onClick={onLogOutClick}>Log out</button>
+        <>
+        <form onSubmit={onSubmit}>
+            <input
+                onChange={onChange}
+                type="text"
+                placeholder="Display name"
+                value={newDisplayName}
+            />
+            <input type="submit" value="Update Profile"/>
+        </form>
+            <button onClick={onLogOutClick}>Log out</button>
+        </>
     );
 };
