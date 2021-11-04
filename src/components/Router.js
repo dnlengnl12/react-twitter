@@ -6,7 +6,7 @@ import { authService } from "fbase";
 import Navigation from "components/Navigation";
 import Profile from "routes/Profile.js";
 
-const AppRouter = ({ isLoggedIn, userObj }) => {
+const AppRouter = ({ refreshUser, isLoggedIn, userObj }) => {
 
     return (
         <Router>
@@ -18,7 +18,7 @@ const AppRouter = ({ isLoggedIn, userObj }) => {
                         <Home userObj = {userObj}></Home>
                     </Route>
                     <Route exact path="/profile">
-                        <Profile userObj={userObj}></Profile>
+                        <Profile userObj={userObj} refreshUser={refreshUser}></Profile>
                     </Route>
                     <Redirect from="*" to="/" />
                 </>

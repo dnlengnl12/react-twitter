@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 
-export default ({userObj}) => {
+export default ({ refreshUser, userObj}) => {
     const history = useHistory();
     const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
     const onLogOutClick = () => {
@@ -32,6 +32,7 @@ export default ({userObj}) => {
         if(userObj.displayName !== newDisplayName) {
             await updateProfile(userObj, {displayName:newDisplayName});
         }
+        refreshUser();
     }
     useEffect(() => {
         getMyTweets();
@@ -46,7 +47,7 @@ export default ({userObj}) => {
                 value={newDisplayName}
             />
             <input type="submit" value="Update Profile"/>
-        </form>
+        </form>     
             <button onClick={onLogOutClick}>Log out</button>
         </>
     );
