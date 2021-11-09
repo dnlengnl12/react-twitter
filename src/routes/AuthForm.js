@@ -3,11 +3,7 @@ import {
     getAuth,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
-    GoogleAuthProvider,
-    GithubAuthProvider,
-    signInWithPopup
 } from "firebase/auth";
-import { authService, firebaseInstance } from "fbase";
 
 const AuthForm = () => {
     const [email, setEmail] = useState('');
@@ -77,4 +73,5 @@ const AuthForm = () => {
         </>
     )
 }
+
 export default AuthForm;

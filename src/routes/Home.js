@@ -7,6 +7,7 @@ import { uploadString, ref,getDownloadURL} from "firebase/storage";
 import TweetFactory from "components/TweetFactory";
 
 const Home = ({ userObj }) => {
+
     const [tweets, setTweets] = useState([]);
     useEffect(() => {
         onSnapshot(
@@ -21,9 +22,9 @@ const Home = ({ userObj }) => {
     }, []);
 
     return (
-        <div>
+        <div className="container">
             <TweetFactory userObj={userObj} />
-            <div>
+            <div style={{ marginTop: 30 }}>
                 {tweets.map((tweet) => (
                     <Tweet key={tweet.id} tweetObj={tweet} isOwner={(tweet.creatorId === userObj.uid) ? true : false}></Tweet>
                 ))}

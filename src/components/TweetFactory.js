@@ -3,11 +3,17 @@ import React, { useState } from "react";
 import { dbService, storageService } from "fbase";
 import { addDoc, collection, getDocs, query, onSnapshot, orderBy } from "firebase/firestore";
 import { uploadString, ref,getDownloadURL} from "firebase/storage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
+
 const TweetFactory = ({ userObj }) => {
     const [tweet, setTweet] = useState("");
     const [attachment, setAttachment] = useState("");
 
     const onSubmit = async (event) => {
+        if (tweet === "") {
+            return;
+          }
         event.preventDefault();
     
         let attachmentUrl = "";
@@ -45,26 +51,40 @@ const TweetFactory = ({ userObj }) => {
         }
         reader.readAsDataURL(theFile);
     };
-    const onClearPhotoClick = () => setAttachment(null);
+    const onClearPhotoClick = () => setAttachment("");
     return (
-    <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} className="factoryForm">
+            <div className="factoryInput__container">
+                <input
+                    className="factoryInput__input"
+                    value={tweet}
+                    onChange={onChange}
+                    type="text"
+                    placeholder="What's on your mind?"
+                    maxLength={120}
+                />
+                <input type="submit" value="&rarr;" className="factoryInput__arrow" />
+            </div>
+            <label for="attach-file" className="factoryInput__label">
+                <span>Add photos</span>
+                <FontAwesomeIcon icon={faPlus} />
+            </label>
         <input
-            value={tweet}
-            onChange={onChange}
-            type="text"
-            placeholder="what's on your mind"
-            maxLength={120}
-        />
-        <input
+            id="attach-file"
             type="file"
             accept="image/*"
             onChange={onFileChange}
+            style={{
+            opacity: 0,
+            }}
         />
-        <input type="submit" value="Tweet" />
         {attachment && 
             <div>
-                <img src={attachment} width="50px" height="50px" />
-                <button onClick={onClearPhotoClick}>Clear</button>
+                <img src={attachment} style={{backgroundImage: attachment,}} />
+                <div className="factoryForm__clear" onClick={onClearPhotoClick}>
+                    <span>Remove</span>
+                    <FontAwesomeIcon icon={faTimes} />
+                </div>
             </div>
         }
     </form>
